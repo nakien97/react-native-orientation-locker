@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4B78D0FD285426A1003E8F33 /* MaySensorOrientationChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B78D0FC285426A1003E8F33 /* MaySensorOrientationChecker.m */; };
 		52EA30BE22DB68DA00018871 /* Orientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EA30BD22DB68DA00018871 /* Orientation.m */; };
 		52EA30BF22DB68DA00018871 /* Orientation.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 52EA30BC22DB68DA00018871 /* Orientation.h */; };
 		52EA30D222DB6A0800018871 /* Orientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EA30BD22DB68DA00018871 /* Orientation.m */; };
@@ -35,6 +36,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4B78D0FB28542650003E8F33 /* MaySensorOrientationChecker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MaySensorOrientationChecker.h; sourceTree = "<group>"; };
+		4B78D0FC285426A1003E8F33 /* MaySensorOrientationChecker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MaySensorOrientationChecker.m; sourceTree = "<group>"; };
 		52EA30B922DB68DA00018871 /* libRCTOrientation.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRCTOrientation.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		52EA30BC22DB68DA00018871 /* Orientation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Orientation.h; sourceTree = "<group>"; };
 		52EA30BD22DB68DA00018871 /* Orientation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Orientation.m; sourceTree = "<group>"; };
@@ -81,6 +84,8 @@
 			children = (
 				52EA30BC22DB68DA00018871 /* Orientation.h */,
 				52EA30BD22DB68DA00018871 /* Orientation.m */,
+				4B78D0FB28542650003E8F33 /* MaySensorOrientationChecker.h */,
+				4B78D0FC285426A1003E8F33 /* MaySensorOrientationChecker.m */,
 			);
 			path = RCTOrientation;
 			sourceTree = "<group>";
@@ -144,6 +149,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 52EA30B022DB68DA00018871;
@@ -162,6 +168,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B78D0FD285426A1003E8F33 /* MaySensorOrientationChecker.m in Sources */,
 				52EA30BE22DB68DA00018871 /* Orientation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -281,7 +288,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "RCTOrientation";
+				PRODUCT_NAME = RCTOrientation;
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -297,7 +304,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "RCTOrientation";
+				PRODUCT_NAME = RCTOrientation;
 				SKIP_INSTALL = YES;
 			};
 			name = Release;

@@ -8,6 +8,8 @@
 
 
 #import "Orientation.h"
+#import "MaySensorOrientationChecker.h"
+#import <CoreMotion/CoreMotion.h>
 
 
 @implementation Orientation
@@ -15,6 +17,8 @@
 #if (!TARGET_OS_TV)
     UIInterfaceOrientation _lastOrientation;
     UIInterfaceOrientation _lastDeviceOrientation;
+    MaySensorOrientationChecker * _sensorOrientationChecker;
+    CMMotionManager * _motionManager;
 #endif
     BOOL _isLocking;
 }
@@ -41,40 +45,69 @@ static UIInterfaceOrientationMask _orientationMask = UIInterfaceOrientationMaskA
         _lastOrientation = [UIApplication sharedApplication].statusBarOrientation;;
         _lastDeviceOrientation = (UIInterfaceOrientation) [UIDevice currentDevice].orientation;
         _isLocking = NO;
+        _sensorOrientationChecker = [MaySensorOrientationChecker new];
+        _motionManager = [[CMMotionManager alloc] init];
+                
+        _motionManager.accelerometerUpdateInterval = 0.2;
+        _motionManager.gyroUpdateInterval = 0.2;
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
-        [self addListener:@"orientationDidChange"];
+        [_motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue new]
+                                             withHandler:^(CMAccelerometerData  *accelerometerData, NSError *error) {
+            if (!error) {
+                UIInterfaceOrientation orientation = [_sensorOrientationChecker getOrientationBy:accelerometerData.acceleration];
+                [self deviceOrientationDidChange:orientation];
+            }
+            
+        }];
+        
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
+//        [self addListener:@"orientationDidChange"];
     }
     return self;
 }
 
 - (void)dealloc
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [self removeListeners:1];
+    [_motionManager stopAccelerometerUpdates];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self];
+//    [self removeListeners:1];
 }
 
-- (void)deviceOrientationDidChange:(NSNotification *)notification
+- (void)deviceOrientationDidChange:(UIInterfaceOrientation)deviceOrientation
 {
-    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
-    UIInterfaceOrientation deviceOrientation = (UIInterfaceOrientation) [UIDevice currentDevice].orientation;
-    
     // do not send Unknown Orientation
     if (deviceOrientation==UIInterfaceOrientationUnknown) {
         return;
     }
     
-    if (orientation!=UIInterfaceOrientationUnknown && orientation!=_lastOrientation) {
-        [self sendEventWithName:@"orientationDidChange" body:@{@"orientation": [self getOrientationStr:orientation]}];
-        _lastOrientation = orientation;
-    }
-    
     // when call lockToXXX, not sent deviceOrientationDidChange
-    if (!_isLocking && deviceOrientation!=_lastDeviceOrientation) {
+    if (deviceOrientation!=_lastDeviceOrientation) {
         [self sendEventWithName:@"deviceOrientationDidChange" body:@{@"deviceOrientation":[self getOrientationStr:deviceOrientation]}];
         _lastDeviceOrientation = deviceOrientation;
     }
 }
+
+//- (void)deviceOrientationDidChange:(NSNotification *)notification
+//{
+//    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+//    UIInterfaceOrientation deviceOrientation = (UIInterfaceOrientation) [UIDevice currentDevice].orientation;
+//
+//    // do not send Unknown Orientation
+//    if (deviceOrientation==UIInterfaceOrientationUnknown) {
+//        return;
+//    }
+//
+//    if (orientation!=UIInterfaceOrientationUnknown && orientation!=_lastOrientation) {
+//        [self sendEventWithName:@"orientationDidChange" body:@{@"orientation": [self getOrientationStr:orientation]}];
+//        _lastOrientation = orientation;
+//    }
+//
+//    // when call lockToXXX, not sent deviceOrientationDidChange
+//    if (!_isLocking && deviceOrientation!=_lastDeviceOrientation) {
+//        [self sendEventWithName:@"deviceOrientationDidChange" body:@{@"deviceOrientation":[self getOrientationStr:deviceOrientation]}];
+//        _lastDeviceOrientation = deviceOrientation;
+//    }
+//}
 
 - (NSString *)getOrientationStr: (UIInterfaceOrientation)orientation {
     
